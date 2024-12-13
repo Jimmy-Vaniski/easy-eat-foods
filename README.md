@@ -41,9 +41,8 @@
 1. Clone the repository:
    ```bash
    git clone https://github.com/Jimmy-Vaniski/easy-eat-foods.git
-   Install the dependencies:
-   bash
-   ```
+Install the dependencies:
+bash
 
 npm install
 Configure the .env file with the environment variables (example in .env.example).
@@ -73,6 +72,7 @@ Portfolio: jimmy-vaniski.netlify.app
 Order tracking
 Reviews for restaurants and products
 Real-time notifications for orders
+
 
 ## 📋 Portugues
 
@@ -115,9 +115,8 @@ Real-time notifications for orders
 1. Clone o repositório:
    ```bash
    git clone https://github.com/Jimmy-Vaniski/easy-eat-foods.git
-   Instale as dependências:
-   bash
-   ```
+Instale as dependências:
+bash
 
 npm install
 Configure o arquivo .env com as variáveis de ambiente (exemplo em .env.example).
