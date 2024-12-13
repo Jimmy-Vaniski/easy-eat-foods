@@ -43,12 +43,12 @@
    git clone https://github.com/Jimmy-Vaniski/easy-eat-foods.git
 Install the dependencies:
 bash
-Copiar código
+
 npm install
 Configure the .env file with the environment variables (example in .env.example).
 Run the project:
 bash
-Copiar código
+
 npm run dev
 Open http://localhost:3000 in your browser to view the app.
 
@@ -117,12 +117,12 @@ Real-time notifications for orders
    git clone https://github.com/Jimmy-Vaniski/easy-eat-foods.git
 Instale as dependências:
 bash
-Copiar código
+
 npm install
 Configure o arquivo .env com as variáveis de ambiente (exemplo em .env.example).
 Execute o projeto:
 bash
-Copiar código
+
 npm run dev
 Abra http://localhost:3000 no navegador para visualizar o projeto.
 
