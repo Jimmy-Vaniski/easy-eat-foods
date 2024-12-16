@@ -1,26 +1,18 @@
-import { Category } from "@prisma/client";
-import Image from "next/image";
-import Link from "next/link";
+import { db } from "../_lib/prisma";
+import CategoryItem from "./category-item";
 
-interface CategoryItemProps {
-  category: Category;
-}
+const CategoryList = async () => {
+  const categories = await db.category.findMany({});
 
-const CategoryItem = ({ category }: CategoryItemProps) => {
+  // encontrar categorias em banco de dados
+  // Renderizar um item para cada categoria encontrada no banco
   return (
-    <Link
-      href={`/categories/${category.id}/products`}
-      className="w-ful flex items-center gap-2 rounded-full bg-white px-4 py-3 shadow-md"
-    >
-      <Image
-        src={category.imageUrl}
-        alt={category.name}
-        height={30}
-        width={30}
-      />
-      <span className="mr-6 text-sm font-semibold">{category.name}</span>
-    </Link>
+    <div className="whidth-auto flex gap-3 overflow-x-scroll pb-1 pt-3 [&::-webkit-scrollbar]:hidden">
+      {categories.map((category) => (
+        <CategoryItem key={category.id} category={category} />
+      ))}
+    </div>
   );
 };
 
-export default CategoryItem;
+export default CategoryList;
