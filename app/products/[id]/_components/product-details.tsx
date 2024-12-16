@@ -39,7 +39,7 @@ const ProductDetails = ({ product, recomendedDrinks }: ProductDetailsProps) => {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const { addProductToCart, products } = useContext(CartContext);
 
-  console.log(products);
+  console.log(products); //remover
 
   const handleAddToCartClick = () => {
     addProductToCart(product, quantity);
