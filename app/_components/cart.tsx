@@ -50,8 +50,16 @@ const Cart = () => {
         user: {
           connect: { id: data.user.id },
         },
-      });
-      clearCart();
+        products: {
+          createMany: {
+            data: products.map((product) => ({
+              productId: product.id,
+              quantity: product.quantity,
+            })),
+          },
+        },
+      }),
+        clearCart();
     } catch (error) {
       console.error(error);
     } finally {
@@ -139,13 +147,14 @@ const Cart = () => {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={isConfirmDialogOpen}>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handlerFinishOrderClick}
+              disabled={isConfirmDialogOpen}
+            >
               {isSubmitLoading && (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               )}
-              Cancel
-            </AlertDialogCancel>
-            <AlertDialogAction onClick={handlerFinishOrderClick}>
               Continuar
             </AlertDialogAction>
           </AlertDialogFooter>
