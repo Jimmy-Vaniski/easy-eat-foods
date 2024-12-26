@@ -56,7 +56,6 @@ const ProductDetails = ({ product, recomendedDrinks }: ProductDetailsProps) => {
 
   const [isConfirmationDialogOpen, setIsConfirmationDialogOpen] =
     useState(false);
-  console.log(products); //remover
 
   const handleAddToCartClick = () => {
     //verificar se existe algum produto dentro do carrinho de outro restaurante
