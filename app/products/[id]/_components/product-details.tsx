@@ -7,8 +7,8 @@ import ProductList from "@/app/_components/product-list";
 import {
   AlertDialog,
   AlertDialogAction,
-  AlertDialogContent,
   AlertDialogCancel,
+  AlertDialogContent,
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
@@ -23,8 +23,8 @@ import {
 } from "@/app/_components/ui/sheet";
 import { CartContext } from "@/app/_context/cart";
 import {
-  calculateProductTotalPrice,
   formatCurrency,
+  calculateProductTotalPrice,
 } from "@/app/_helpers/price";
 import { Prisma } from "@prisma/client";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
@@ -37,33 +37,36 @@ interface ProductDetailsProps {
       restaurant: true;
     };
   }>;
-  recomendedDrinks: Prisma.ProductGetPayload<{
+  complementaryProducts: Prisma.ProductGetPayload<{
     include: {
       restaurant: true;
     };
   }>[];
 }
 
-const ProductDetails = ({ product, recomendedDrinks }: ProductDetailsProps) => {
+const ProductDetails = ({
+  product,
+  complementaryProducts,
+}: ProductDetailsProps) => {
   const [quantity, setQuantity] = useState(1);
   const [isCartOpen, setIsCartOpen] = useState(false);
-  const { addProductToCart, products } = useContext(CartContext);
-
-  const addToCart = ({ emptyCart }: { emptyCart?: boolean }) => {
-    addProductToCart({ product, quantity, emptyCart });
-    setIsCartOpen(true);
-  };
-
   const [isConfirmationDialogOpen, setIsConfirmationDialogOpen] =
     useState(false);
 
+  const { addProductToCart, products } = useContext(CartContext);
+
+  const addToCart = ({ emptyCart }: { emptyCart?: boolean }) => {
+    addProductToCart({ product: { ...product, quantity }, emptyCart });
+    setIsCartOpen(true);
+  };
+
   const handleAddToCartClick = () => {
-    //verificar se existe algum produto dentro do carrinho de outro restaurante
+    // VERIFICAR SE HÁ ALGUM PRODUTO DE OUTRO RESTAURANTE NO CARRINHO
     const hasDifferentRestaurantProduct = products.some(
       (cartProduct) => cartProduct.restaurantId !== product.restaurantId,
     );
 
-    // caso haja abrir um aviso que os itens serão apagados
+    // SE HOUVER, ABRIR UM AVISO
     if (hasDifferentRestaurantProduct) {
       return setIsConfirmationDialogOpen(true);
     }
@@ -85,7 +88,7 @@ const ProductDetails = ({ product, recomendedDrinks }: ProductDetailsProps) => {
   return (
     <>
       <div className="relative z-50 mt-[-1.5rem] rounded-tl-3xl rounded-tr-3xl bg-white py-5">
-        {/* Restaurante */}
+        {/* RESTAURANTE */}
         <div className="flex items-center gap-[0.375rem] px-5">
           <div className="relative h-6 w-6">
             <Image
@@ -93,7 +96,7 @@ const ProductDetails = ({ product, recomendedDrinks }: ProductDetailsProps) => {
               alt={product.restaurant.name}
               fill
               sizes="100%"
-              className="!rounded-full object-cover"
+              className="rounded-full object-cover"
             />
           </div>
           <span className="text-xs text-muted-foreground">
@@ -101,32 +104,31 @@ const ProductDetails = ({ product, recomendedDrinks }: ProductDetailsProps) => {
           </span>
         </div>
 
-        {/* Nome do produto */}
+        {/* NOME DO PRODUTO */}
         <h1 className="mb-2 mt-1 px-5 text-xl font-semibold">{product.name}</h1>
 
-        {/*  Div pai do Preço do produto e quantidade */}
+        {/* PREÇO DO PRODUTO E QUANTIDADE */}
         <div className="flex justify-between px-5">
-          {/* Preço do produto COM DESCONTO*/}
+          {/* PREÇO COM DESCONTO */}
           <div>
             <div className="flex items-center gap-2">
               <h2 className="text-xl font-semibold">
                 {formatCurrency(calculateProductTotalPrice(product))}
               </h2>
-
               {product.discountPercentage > 0 && (
                 <DiscountBadge product={product} />
               )}
             </div>
 
-            {/* Preço do produto SEM DESCONTO */}
+            {/* PREÇO ORIGINAL */}
             {product.discountPercentage > 0 && (
-              <p className="text-muted-foreground">
+              <p className="text-sm text-muted-foreground">
                 De: {formatCurrency(Number(product.price))}
               </p>
             )}
           </div>
 
-          {/*  Quantidade */}
+          {/* QUANTIDADE */}
           <div className="flex items-center gap-3 text-center">
             <Button
               size="icon"
@@ -153,9 +155,10 @@ const ProductDetails = ({ product, recomendedDrinks }: ProductDetailsProps) => {
         </div>
 
         <div className="mt-6 space-y-3">
-          <h3 className="px-5 font-semibold">Bebidas Recomendadas</h3>
-          <ProductList products={recomendedDrinks} />
+          <h3 className="px-5 font-semibold">Sucos</h3>
+          <ProductList products={complementaryProducts} />
         </div>
+
         <div className="mt-6 px-5">
           <Button
             className="w-full font-semibold"
@@ -167,11 +170,12 @@ const ProductDetails = ({ product, recomendedDrinks }: ProductDetailsProps) => {
       </div>
 
       <Sheet open={isCartOpen} onOpenChange={setIsCartOpen}>
-        <SheetContent>
+        <SheetContent className="w-[90vw]">
           <SheetHeader>
-            <SheetTitle className="text-left">Saco de compras</SheetTitle>
+            <SheetTitle className="text-left">Sacola</SheetTitle>
           </SheetHeader>
-          <Cart />
+
+          <Cart setIsOpen={setIsCartOpen} />
         </SheetContent>
       </Sheet>
 
@@ -182,17 +186,17 @@ const ProductDetails = ({ product, recomendedDrinks }: ProductDetailsProps) => {
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>
-              Tem certeza que deseja fazer isso?
+              Você só pode adicionar itens de um restaurante por vez
             </AlertDialogTitle>
             <AlertDialogDescription>
-              Esta ação não pode ser desfeita. Isso limpará os ados atuais de
-              seu saco de compras.
+              Deseja mesmo adicionar esse produto? Isso limpará sua sacola
+              atual.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancelar</AlertDialogCancel>
             <AlertDialogAction onClick={() => addToCart({ emptyCart: true })}>
-              Esvaziar saco de compras
+              Esvaziar sacola e adicionar
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
