@@ -18,10 +18,18 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "./ui/alert-dialog";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
-const Cart = () => {
+interface CartProps {
+  // eslint-disable-next-line no-unused-vars
+  setIsOpen: (isOpen: boolean) => void;
+}
+
+const Cart = ({ setIsOpen }: CartProps) => {
+  const router = useRouter();
+
   const [isSubmitLoading, setIsSubmitLoading] = useState(false);
   const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
 
@@ -30,13 +38,14 @@ const Cart = () => {
   const { products, subtotalPrice, totalPrice, totalDiscounts, clearCart } =
     useContext(CartContext);
 
-  const handlerFinishOrderClick = async () => {
+  const handleFinishOrderClick = async () => {
     if (!data?.user) return;
 
     const restaurant = products[0].restaurant;
 
     try {
       setIsSubmitLoading(true);
+
       await createOrder({
         subtotalPrice,
         totalDiscounts,
@@ -58,8 +67,18 @@ const Cart = () => {
             })),
           },
         },
-      }),
-        clearCart();
+      });
+
+      clearCart();
+      setIsOpen(false);
+
+      toast("Seu pedido finalizado com sucesso!", {
+        description: "Acompanhe mais detalhes em Meus pedidos.",
+        action: {
+          label: "Meus Pedidos",
+          onClick: () => router.push("/my-orders"),
+        },
+      });
     } catch (error) {
       console.error(error);
     } finally {
@@ -70,7 +89,6 @@ const Cart = () => {
   return (
     <>
       <div className="flex h-full flex-col py-5">
-        {/*TOTAIS*/}
         {products.length > 0 ? (
           <>
             <div className="flex-auto space-y-4">
@@ -78,9 +96,11 @@ const Cart = () => {
                 <CartItem key={product.id} cartProduct={product} />
               ))}
             </div>
+
+            {/* TOTAIS */}
             <div className="mt-6">
               <Card>
-                <CardContent className="mt-6 space-y-2 p-5">
+                <CardContent className="space-y-2 p-5">
                   <div className="flex items-center justify-between text-xs">
                     <span className="text-muted-foreground">Subtotal</span>
                     <span>{formatCurrency(subtotalPrice)}</span>
@@ -93,7 +113,7 @@ const Cart = () => {
                     <span>- {formatCurrency(totalDiscounts)}</span>
                   </div>
 
-                  <Separator className="h-[0.5]" />
+                  <Separator className="h-[0.5px]" />
 
                   <div className="flex items-center justify-between text-xs">
                     <span className="text-muted-foreground">Entrega</span>
@@ -116,7 +136,8 @@ const Cart = () => {
                 </CardContent>
               </Card>
             </div>
-            {/*FINALIZAÇÃO DO PEDIDO*/}
+
+            {/* FINALIZAR PEDIDO */}
             <Button
               className="mt-6 w-full"
               onClick={() => setIsConfirmDialogOpen(true)}
@@ -126,36 +147,32 @@ const Cart = () => {
             </Button>
           </>
         ) : (
-          <h2 className="text-center font-medium">
-            Você ainda não adicionou nenhum produto ao carrinho.
-          </h2>
+          <h2 className="text-left font-medium">Sua sacola está vazia.</h2>
         )}
       </div>
+
       <AlertDialog
         open={isConfirmDialogOpen}
         onOpenChange={setIsConfirmDialogOpen}
       >
-        <AlertDialogTrigger>
-          Deseja realmente finalizar o pedido?
-        </AlertDialogTrigger>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+            <AlertDialogTitle>Deseja finalizar seu pedido?</AlertDialogTitle>
             <AlertDialogDescription>
-              Ao finalizar o pedido você concorda com os termos e condições da
-              nossa da plataforma.
+              Ao finalizar seu pedido, você concorda com os termos e condições
+              da nossa plataforma.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
             <AlertDialogAction
-              onClick={handlerFinishOrderClick}
-              disabled={isConfirmDialogOpen}
+              onClick={handleFinishOrderClick}
+              disabled={isSubmitLoading}
             >
               {isSubmitLoading && (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               )}
-              Continuar
+              Finalizar
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
