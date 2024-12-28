@@ -27,16 +27,17 @@ const ProductItem = ({ product, className }: ProductItemProps) => {
       href={`/products/${product.id}`}
     >
       <div className="w-full space-y-2">
-        <div className="relative aspect-square">
+        <div className="relative aspect-square w-full">
           <Image
             src={product.imageUrl}
             alt={product.name}
             fill
+            sizes="100%"
             className="rounded-lg object-cover shadow-md"
           />
 
           {product.discountPercentage && (
-            <div className="absolute left-2 top-2 flex items-center gap-1 rounded-full bg-primary px-2 py-[2px] text-white">
+            <div className="absolute left-2 top-2 flex items-center gap-[2px] rounded-full bg-primary px-2 py-[2px] text-white">
               <ArrowDownIcon size={12} />
               <span className="text-xs font-semibold">
                 {product.discountPercentage}%
@@ -57,6 +58,7 @@ const ProductItem = ({ product, className }: ProductItemProps) => {
               </span>
             )}
           </div>
+
           <span className="block text-xs text-muted-foreground">
             {product.restaurant.name}
           </span>

@@ -1,15 +1,15 @@
-import { CartContext, CartProduct } from "../_context/cart";
 import Image from "next/image";
+import { CartContext, CartProduct } from "../_context/cart";
 import { calculateProductTotalPrice, formatCurrency } from "../_helpers/price";
 import { Button } from "./ui/button";
 import { ChevronLeftIcon, ChevronRightIcon, TrashIcon } from "lucide-react";
-import { useContext } from "react";
+import { memo, useContext } from "react";
 
-interface CartItemProp {
+interface CartItemProps {
   cartProduct: CartProduct;
 }
 
-const CartItem = ({ cartProduct }: CartItemProp) => {
+const CartItem = ({ cartProduct }: CartItemProps) => {
   const {
     decreaseProductQuantity,
     increaseProductQuantity,
@@ -27,12 +27,13 @@ const CartItem = ({ cartProduct }: CartItemProp) => {
   return (
     <div className="flex items-center justify-between">
       <div className="flex items-center gap-4">
-        {/* Imagem e info */}
+        {/* IMAGEM E INFO */}
         <div className="relative h-20 w-20">
           <Image
             src={cartProduct.imageUrl}
             alt={cartProduct.name}
             fill
+            sizes="100%"
             className="rounded-lg object-cover"
           />
         </div>
@@ -54,38 +55,45 @@ const CartItem = ({ cartProduct }: CartItemProp) => {
               </span>
             )}
           </div>
+
+          {/* QUANTIDADE */}
+
           <div className="flex items-center text-center">
             <Button
               size="icon"
               variant="ghost"
-              className="h-8 w-8 border border-solid border-muted-foreground"
-              onClick={handleDecreaseQuantityClick}
+              className="h-7 w-7 border border-solid border-muted-foreground"
             >
-              <ChevronLeftIcon size={18} />
+              <ChevronLeftIcon
+                size={16}
+                onClick={handleDecreaseQuantityClick}
+              />
             </Button>
-            <span className="block w-7 text-sm">{cartProduct.quantity}</span>
+            <p className="block w-8 text-xs">{cartProduct.quantity}</p>
             <Button
               size="icon"
-              className="h-8 w-8"
+              className="h-7 w-7"
               onClick={handleIncreaseQuantityClick}
             >
-              <ChevronRightIcon size={18} />
+              <ChevronRightIcon size={16} />
             </Button>
           </div>
         </div>
       </div>
 
-      {/* Botão de deletar do carrinho */}
+      {/* BOTÃO DE DELETAR */}
       <Button
         size="icon"
         variant="ghost"
-        className="h-8 w-8 border border-solid border-muted-foreground"
+        className="h-7 w-7 border border-solid border-muted-foreground"
         onClick={handleRemoveClick}
       >
-        <TrashIcon size={18} />
+        <TrashIcon size={16} />
       </Button>
     </div>
   );
 };
 
-export default CartItem;
+export default memo(CartItem, (prev, next) => {
+  return prev.cartProduct.quantity === next.cartProduct.quantity;
+});

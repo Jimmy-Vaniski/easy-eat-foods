@@ -72,8 +72,8 @@ const Cart = ({ setIsOpen }: CartProps) => {
       clearCart();
       setIsOpen(false);
 
-      toast("Seu pedido finalizado com sucesso!", {
-        description: "Acompanhe mais detalhes em Meus pedidos.",
+      toast("Pedido finalizado com sucesso!", {
+        description: "Você pode acompanhá-lo na tela dos seus pedidos.",
         action: {
           label: "Meus Pedidos",
           onClick: () => router.push("/my-orders"),

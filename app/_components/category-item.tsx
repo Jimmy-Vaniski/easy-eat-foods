@@ -10,7 +10,7 @@ const CategoryItem = ({ category }: CategoryItemProps) => {
   return (
     <Link
       href={`/categories/${category.id}/products`}
-      className="w-ful flex items-center gap-2 rounded-full bg-white px-4 py-3 shadow-md"
+      className="flex items-center justify-center gap-3 rounded-full bg-white px-4 py-3 shadow-md"
     >
       <Image
         src={category.imageUrl}
@@ -18,7 +18,8 @@ const CategoryItem = ({ category }: CategoryItemProps) => {
         height={30}
         width={30}
       />
-      <span className="mr-6 text-sm font-semibold">{category.name}</span>
+
+      <span className="text-sm font-semibold">{category.name}</span>
     </Link>
   );
 };

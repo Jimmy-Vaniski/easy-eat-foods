@@ -1,7 +1,7 @@
 import { Prisma } from "@prisma/client";
 import ProductItem from "./product-item";
 
-interface ProductsListProps {
+interface ProductListProps {
   products: Prisma.ProductGetPayload<{
     include: {
       restaurant: {
@@ -13,7 +13,7 @@ interface ProductsListProps {
   }>[];
 }
 
-const ProductList = ({ products }: ProductsListProps) => {
+const ProductList = ({ products }: ProductListProps) => {
   return (
     <div className="flex gap-4 overflow-x-scroll px-5 [&::-webkit-scrollbar]:hidden">
       {products.map((product) => (

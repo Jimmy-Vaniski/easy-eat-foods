@@ -16,6 +16,7 @@ const Search = () => {
 
   const handleSearchSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
+
     if (!search) {
       return;
     }
@@ -26,7 +27,7 @@ const Search = () => {
   return (
     <form className="flex gap-2" onSubmit={handleSearchSubmit}>
       <Input
-        placeholder="Buscar"
+        placeholder="Buscar restaurantes"
         className="border-none"
         onChange={handleChange}
         value={search}
