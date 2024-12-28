@@ -6,6 +6,8 @@ import { StarIcon } from "lucide-react";
 import DeliveryInfo from "@/app/_components/delivery-info";
 import ProductList from "@/app/_components/product-list";
 import CartBanner from "./_components/cart-banner";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/_lib/auth";
 
 interface RestaurantPageProps {
   params: {
@@ -54,13 +56,23 @@ const RestaurantPage = async ({ params: { id } }: RestaurantPageProps) => {
   if (!restaurant) {
     return notFound();
   }
+  const session = await getServerSession(authOptions);
+
+  const userFavoriteRestaurants = await db.userFavoriteRestaurant.findMany({
+    where: {
+      userId: session?.user.id,
+    },
+  });
 
   return (
     <div>
-      <RestaurantImage restaurant={restaurant} />
+      <RestaurantImage
+        restaurant={restaurant}
+        userFavoriteRestaurants={userFavoriteRestaurants}
+      />
 
       <div className="relative z-50 mt-[-1.5rem] flex items-center justify-between rounded-tl-3xl rounded-tr-3xl bg-white px-5 pt-5">
-        {/* TITULO do RESTAURANTE */}
+        {/* TITULO */}
         <div className="flex items-center gap-[0.375rem]">
           <div className="relative h-8 w-8">
             <Image
@@ -68,14 +80,14 @@ const RestaurantPage = async ({ params: { id } }: RestaurantPageProps) => {
               alt={restaurant.name}
               fill
               sizes="100%"
-              className="!rounded-full object-cover"
+              className="rounded-full object-cover"
             />
           </div>
-          <h1 className="text-2xl font-bold">{restaurant.name}</h1>
+          <h1 className="text-xl font-semibold">{restaurant.name}</h1>
         </div>
 
-        <div className="flex items-center gap-[3px] rounded-full bg-foreground px-2 py-[3px] text-white">
-          <StarIcon size={12} className="fill-yellow-500 text-yellow-500" />
+        <div className="flex items-center gap-[3px] rounded-full bg-foreground px-2 py-[2px] text-white">
+          <StarIcon size={12} className="fill-yellow-400 text-yellow-400" />
           <span className="text-xs font-semibold">5.0</span>
         </div>
       </div>
@@ -88,7 +100,7 @@ const RestaurantPage = async ({ params: { id } }: RestaurantPageProps) => {
         {restaurant.categories.map((category) => (
           <div
             key={category.id}
-            className="min-w-[167px] rounded-lg bg-[#f4f4f4] py-2 text-center"
+            className="min-w-[167px] rounded-lg bg-[#F4F4F4] text-center"
           >
             <span className="text-xs text-muted-foreground">
               {category.name}
@@ -96,15 +108,17 @@ const RestaurantPage = async ({ params: { id } }: RestaurantPageProps) => {
           </div>
         ))}
       </div>
+
       <div className="mt-6 space-y-4">
-        {/* TODO Mostrar produtos mais vendidos do restaurante quando implementar realizacao de pedidos */}
-        <h2 className="font-semibold">Mais pedidos</h2>
+        {/* TODO: mostrar produtos mais pedidos quando implementarmos realização de pedido */}
+        <h2 className="px-5 font-semibold">Mais Pedidos</h2>
         <ProductList products={restaurant.products} />
       </div>
 
       {restaurant.categories.map((category) => (
         <div className="mt-6 space-y-4" key={category.id}>
-          <h2 className="font-semibold">{category.name}</h2>
+          {/* TODO: mostrar produtos mais pedidos quando implementarmos realização de pedido */}
+          <h2 className="px-5 font-semibold">{category.name}</h2>
           <ProductList products={category.products} />
         </div>
       ))}

@@ -9,9 +9,7 @@ interface ProductPageProps {
   };
 }
 
-const ProductPage = async ({ params }: ProductPageProps) => {
-  const { id } = params; // Extraindo `id` de forma assíncrona
-
+const ProductPage = async ({ params: { id } }: ProductPageProps) => {
   const product = await db.product.findUnique({
     where: {
       id,
@@ -31,22 +29,21 @@ const ProductPage = async ({ params }: ProductPageProps) => {
         name: "Sucos",
       },
       restaurant: {
-        id: product?.restaurantId,
+        id: product?.restaurant.id,
       },
     },
     include: {
       restaurant: true,
     },
-    take: 10,
   });
 
   return (
     <div>
-      {/* Imagem do produto */}
+      {/* IMAGEM */}
       <ProductImage product={product} />
 
-      {/* Div pai das informações do produto */}
-      <ProductDetails product={product} recomendedDrinks={juices} />
+      {/* TITULO E PREÇO */}
+      <ProductDetails product={product} complementaryProducts={juices} />
     </div>
   );
 };
