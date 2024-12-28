@@ -63,11 +63,9 @@ const CartItem = ({ cartProduct }: CartItemProps) => {
               size="icon"
               variant="ghost"
               className="h-7 w-7 border border-solid border-muted-foreground"
+              onClick={handleDecreaseQuantityClick}
             >
-              <ChevronLeftIcon
-                size={16}
-                onClick={handleDecreaseQuantityClick}
-              />
+              <ChevronLeftIcon size={16} />
             </Button>
             <p className="block w-8 text-xs">{cartProduct.quantity}</p>
             <Button
