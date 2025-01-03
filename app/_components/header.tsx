@@ -31,7 +31,7 @@ const Header = () => {
   return (
     <div className="flex justify-between px-5 pt-6">
       <Link href="/">
-        <div className="relative h-[30px] w-[100px]">
+        <div className="relative h-[30px] w-[120px]">
           <Image
             src="/logo.png"
             alt="FSW Foods"
@@ -97,13 +97,15 @@ const Header = () => {
           </div>
 
           <div className="space-y-2">
-            <Button
-              variant="ghost"
-              className="w-full justify-start space-x-3 rounded-full text-sm font-normal"
-            >
-              <HomeIcon size={16} />
-              <span className="block">Início</span>
-            </Button>
+            <Link href="/">
+              <Button
+                variant="ghost"
+                className="w-full justify-start space-x-3 rounded-full text-sm font-normal"
+              >
+                <HomeIcon size={16} />
+                <span className="block">Início</span>
+              </Button>
+            </Link>
 
             {data?.user && (
               <>
