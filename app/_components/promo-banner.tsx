@@ -9,6 +9,7 @@ const PromoBanner = (props: ImageProps) => {
       sizes="100%"
       quality={100}
       {...props}
+      alt="Promo Banner"
     />
   );
 };
